@@ -49,9 +49,9 @@ plt.figure()
 plt.grid(color='grey', linestyle='-', linewidth=0.1)
 plt.errorbar(x, y, yerr = y_err, xerr= None,color='tab:red', fmt = '.', markersize=1, label = 'Messdaten',zorder=0)
 plt.legend(loc='best')
-plt.xlabel('Kanäle', fontsize = 20)
-plt.ylabel('Anzahl der Ereignisse N', fontsize = 20)
-plt.savefig('alpha_211_fit.png', dpi=1000, bbox_inches = "tight")
+plt.xlabel('Kanäle')
+plt.ylabel('Anzahl der Ereignisse N')
+plt.savefig('alpha_211_fit.pdf', bbox_inches = "tight")
 plt.show()
 
 x = x[90:1000] #schraenke Messdaten auf interessantes Intervall ein
@@ -106,9 +106,9 @@ plt.errorbar(x, y, yerr = y_err, xerr= None,color='tab:red', fmt = '.', markersi
 plt.plot(x, func(x, popt[0], popt[1], popt[2]), color='tab:blue', linewidth = 0.5, label = 'Landau-Verteilung')
 plt.plot(x, func2(x, popt1[0], popt1[1], popt1[2]), color='tab:green', linewidth = 0.5, label = 'Gauß-Verteilung')
 plt.legend(loc='best')
-plt.xlabel('Kanäle', fontsize = 20)
-plt.ylabel('Anzahl der Ereignisse N', fontsize = 20)
-plt.savefig('alpha_211_fit_intervall_fehler.png', dpi=1000, bbox_inches = "tight")
+plt.xlabel('Kanäle')
+plt.ylabel('Anzahl der Ereignisse N')
+plt.savefig('alpha_211_fit_intervall_fehler.pdf', bbox_inches = "tight")
 plt.show()
 
 #Plotte die Funktion des eingeschraenkten Intervalls sowie den Fit ohne y-Fehler
@@ -118,9 +118,9 @@ plt.errorbar(x, y, yerr = None, xerr= None,color='tab:red', fmt = '.', markersiz
 plt.plot(x, func(x, popt[0], popt[1], popt[2]), color='tab:blue', linewidth = 0.5, label = 'Landau-Verteilung')
 plt.plot(x, func2(x, popt1[0], popt1[1], popt1[2]), color='tab:green', linewidth = 0.5, label = 'Gauß-Verteilung')
 plt.legend(loc='best')
-plt.xlabel('Kanäle', fontsize = 20)
-plt.ylabel('Anzahl der Ereignisse N', fontsize = 20)
-plt.savefig('alpha_211_fit_intervall.png', dpi=1000, bbox_inches = "tight")
+plt.xlabel('Kanäle')
+plt.ylabel('Anzahl der Ereignisse N')
+plt.savefig('alpha_211_fit_intervall.pdf', bbox_inches = "tight")
 plt.show()
 
 file.close()

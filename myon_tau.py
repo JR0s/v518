@@ -57,8 +57,8 @@ plt.grid(color='grey', linestyle='-', linewidth=0.1)
 plt.errorbar(x, y, yerr = y_err, xerr= None, color='tab:red', fmt = '.', markersize=6, label = 'Messdaten',zorder=0)
 plt.plot(x_plot, func(x_plot, popt[0], popt[1]), color='tab:blue', linewidth = 0.5, label = 'Anpassung')
 plt.legend(loc='best')
-plt.xlabel('Zeit in ms', fontsize = 20)
-plt.ylabel('Anzahl an Ereignissen', fontsize = 20)
-plt.savefig('lebensdauer.png', dpi=1000, bbox_inches = "tight")
+plt.xlabel('Zeit in ms')
+plt.ylabel('Anzahl an Ereignissen')
+# why set such a huge DPI? Just save as a PDF
+plt.savefig('lebensdauer.pdf', bbox_inches = "tight")
 plt.show()
-
