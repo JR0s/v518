@@ -10,9 +10,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+from utils import χ_sq
+
 def func(x, a, tau): #definiere Lebensdauerverteilung
     return a*np.exp(-x/tau)
-
 
 #Anzahl an Start Signalen: 1156243
 #Anzahl an Stopp Signalen: 2520522
@@ -25,7 +26,7 @@ y_err = np.sqrt(y) #Fehler durch Wurzel erhalten
 #Anpassung an Lebensdauerverteilung
 guess = np.array([1500, 2.2])
 
-popt, pcov = curve_fit(func, x, y, p0=guess, sigma=y_err, absolute_sigma=True)
+(popt, pcov) = curve_fit(func, x, y, p0=guess, sigma=y_err, absolute_sigma=True)
 
 #Gebe Fit-Parameter aus
 print(popt)
@@ -36,20 +37,12 @@ print("----------")
 x_plot = np.array([]) #erstelle Array zur genaueren Darstellung der Anpassungsfunktion
 for i in range(101):
     x_plot = np.append(x_plot, i*0.1)
-    
 
-#Berechnung des Chi-Quadrats: nach X =  sum(gemessen-erwartet)^2/erwartet)/N_ges
-
-chi2 = 0
-yer = 0
-
-for i in range(len(x)):
-    yer = func(x[i], popt[0], popt[1])
-    chi2 =  chi2 + (y[i] - yer)**2/yer/2474
-
-print(chi2)
-
-    
+# calculate χ² from the function + x values (for ŷ), y values and errors
+χ_sq_val = χ_sq(func, x, popt, y, y_err)
+print("χ² = {}".format(χ_sq_val))
+dof = len(x) - len(popt)
+print("χ²/dof = {}".format(χ_sq_val / dof))
 
 #Plotte die Funktion und Anpassung
 plt.figure()
@@ -57,8 +50,8 @@ plt.grid(color='grey', linestyle='-', linewidth=0.1)
 plt.errorbar(x, y, yerr = y_err, xerr= None, color='tab:red', fmt = '.', markersize=6, label = 'Messdaten',zorder=0)
 plt.plot(x_plot, func(x_plot, popt[0], popt[1]), color='tab:blue', linewidth = 0.5, label = 'Anpassung')
 plt.legend(loc='best')
-plt.xlabel('Zeit in ms', fontsize = 20)
-plt.ylabel('Anzahl an Ereignissen', fontsize = 20)
-plt.savefig('lebensdauer.png', dpi=1000, bbox_inches = "tight")
+plt.xlabel('Zeit in ms')
+plt.ylabel('Anzahl an Ereignissen')
+# why set such a huge DPI? Just save as a PDF
+plt.savefig('lebensdauer.pdf', bbox_inches = "tight")
 plt.show()
-
