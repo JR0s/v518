@@ -13,6 +13,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+from utils import χ_sq
+
 def func(x, a, mu, sigma): #naehere Landau-Verteilung durch folgenden Ausdruck an
     lambd = (x-mu)/sigma
     return a/(np.sqrt(2*np.pi))*np.exp(-0.5*(lambd+np.exp(-lambd)))
@@ -40,8 +42,8 @@ for i in range(len(lines)):
     head, sep, tail = text.partition(',')
     x = np.append(x,float(head))
     y = np.append(y,float(tail))
-    
-    
+
+
 y_err = np.sqrt(y) #erzeuge y-Fehler durch Wurzel nehmen
 
 #Plotte die Funktion der gesamnten Daten (einbegriffen des Rauschens)
@@ -81,24 +83,21 @@ print(np.sqrt(pcov1[2][2]))
 print("----------")
 
 #Berechnung des Chi-Quadrats Landau: nach X =  sum(gemessen-erwartet)^2/erwartet)/N_ges
+# fix y errors. If 0 set to 1
+y_err[y_err == 0.0] = 1.0
+χ_sq_landau = χ_sq(func, x, popt, y, y_err)
+print("Landau:\n\tχ² = {}".format(χ_sq_landau))
+dof = len(x) - len(popt)
+print("\tχ²/dof = {}".format(χ_sq_landau / dof))
 
-chi2 = 0
-yer = 0
-for i in range(len(x)):
-    yer = func(x[i], popt[0], popt[1],popt[2])
-    chi2 =  chi2 + (y[i] - yer)**2/yer/14322
-
-print("Güte von Landau = ", chi2)
 print("---")
 
-for i in range(len(x)):
-    yer = func2(x[i], popt1[0], popt1[1],popt1[2])
-    chi2 =  chi2 + (y[i] - yer)**2/yer/14322
+χ_sq_gauss = χ_sq(func2, x, popt, y, y_err)
+print("Gauß:\n\tχ² = {}".format(χ_sq_gauss))
+dof = len(x) - len(popt)
+print("\tχ²/dof = {}".format(χ_sq_gauss / dof))
 
-    
-print("Güte von Gauß = ", chi2)
 
-    
 #Plotte die Funktion des eingeschraenkten Intervalls sowie den Fit mit y-Fehlern
 plt.figure()
 plt.grid(color='grey', linestyle='-', linewidth=0.1)

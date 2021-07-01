@@ -10,6 +10,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
+from utils import χ_sq
+
 def func(x, a, n): #definiere Winkelverteilung
     return a*np.power(np.cos(np.radians(x)), n)
 
@@ -26,7 +28,7 @@ def func(x, a, n): #definiere Winkelverteilung
 #10-22: -30 Grad
 #11-23: -15 Grad
 #12-24: 0 Grad
-    
+
 
 #Bestimme Zaehlraten und entsprechende Winkelwerte
 x = np.array([-75, -60, -45, -30, -15, 0, 15, 30, 45, 60, 75, 90])
@@ -66,28 +68,21 @@ print("----------")
 x_plot = np.array([]) #erstelle Array zur genaueren Darstellung der Anpassungsfunktion
 for i in range(1651):
     x_plot = np.append(x_plot, i*0.1-75)
-    
+
 
 #Berechnung des Chi-Quadrats mit Datenpunkt  bei  0: nach X =  sum(gemessen-erwartet)^2/erwartet)/N_ges
+χ_sq_val_full = χ_sq(func, x, popt, y, y_err)
+print("Full:\n\tχ² = {}".format(χ_sq_val_full))
+dof = len(x) - len(popt)
+print("\tχ²/dof = {}".format(χ_sq_val_full / dof))
 
-chi2 = 0
-yer = 0
+print("------------------------------")
 
-for i in range(len(x)-1):
-    yer = func(x[i], popt[0], popt[1])
-    chi2 =  chi2 + (y[i] - yer)**2/(yer*26196)
+χ_sq_val_wo_0 = χ_sq(func, xFit, poptOhneN, yFit, y_errFit)
+print("\ 0 :\n\tχ² = {}".format(χ_sq_val_wo_0))
+dof = len(x) - len(popt)
+print("\tχ²/dof = {}".format(χ_sq_val_wo_0 / dof))
 
-
-
-print("Güte mit berücksichtigung von 0 = ", chi2)
-
-chi2 = 0
-for i in range(len(xFit)):
-    yer = func(x[i], poptOhneN[0], poptOhneN[1])
-    chi2 =  chi2 + (yFit[i] - yer)**2/(yer*(26196-3038))
-
-print("Güte ohne berücksichtigung von 0 = ", chi2)
-    
 
 #Plotte die Funktion und Anpassung
 plt.figure()
